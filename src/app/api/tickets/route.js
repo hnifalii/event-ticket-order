@@ -1,12 +1,12 @@
 import { google } from "googleapis";
 
-console.log("API call hit: /api/tickets")
-let cacheCount = 0
+console.log("API call hit: /api/tickets");
+let cacheCount = 0;
 
 export async function GET() {
   console.log("Calling Google Sheets API...");
-  cacheCount++
-  console.log("Google API call:", cacheCount)
+  cacheCount++;
+  console.log("Google API call:", cacheCount);
   try {
     const auth = new google.auth.GoogleAuth({
       credentials: {
@@ -20,27 +20,42 @@ export async function GET() {
 
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.SHEET_ID,
-      range: "events!A2:G",
+      range: "events!A2:I",
     });
-
-
 
     const rows = response.data.values;
 
-    const events = rows.map((row) => ({
-      id: row[0],
-      name: row[1],
-      desc: row[2],
-      price: row[3],
-      date: row[4],
-      time_start: row[5],
-      time_end: row[6],
-    }));
+    const events = rows.map((row) => {
+      const type = row[3]; // get ticket type (single/tiered)
+      const regPrice = Number(row[4]) || 0;
+      const vipPrice = Number(row[5]) || 0;
+
+      let price;
+
+      if (type === "single") {
+        price = row[4];
+      } else if (type === "tiered") {
+        price = { reg: regPrice, vip: vipPrice };
+      }
+
+      return {
+        event_id: row[0],
+        name: row[1],
+        desc: row[2],
+        type,
+        price,
+        date: row[6],
+        time_start: row[7],
+        time_end: row[8],
+      };
+    });
 
     return Response.json(events);
   } catch (error) {
-    console.error("GOOGLE API ERROR:", error)
+    console.error("GOOGLE API ERROR:", error);
     return Response.json(
-        { message: "Google Sheets Error", error: String(error) }, { status: 500 });
+      { message: "Google Sheets Error", error: String(error) },
+      { status: 500 }
+    );
   }
 }

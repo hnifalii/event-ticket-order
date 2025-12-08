@@ -2,7 +2,6 @@
 
 import {useEffect, useState, useRef, useCallback} from "react";
 import {Html5QrcodeScanner} from "html5-qrcode";
-import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 
 const StatusModal = ({message, type, onClose}) => {
     const isSuccess = type === "success";

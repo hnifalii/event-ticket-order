@@ -132,7 +132,7 @@ export default function LoginCard() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    {error && <p className="text-red-500 text-sm p-3 bg-red-100 rounded-sm border-s-[3px]">{error}</p>}
                     
                     <div>
                         <button

@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { users } from "@/data/users";
 
 const authOptions = {
     session: {
@@ -11,24 +12,15 @@ const authOptions = {
             type: 'credentials',
             name: 'Credentials',
             credentials: {
-                email: {label: "Username", type: "text"},
-                password: {label: "Password", type: "password"},
+                email: { label: "Username", type: "text" },
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
                 const {username, password} = credentials;
 
-                const user = {
-                    id: 1,
-                    name: 'Admin',
-                    username: 'admin1234',
-                    role: 'admin',
-                };
-
-                if (username === "admin123" && password === "12345678") {
-                    return user;
-                } else {
-                    return null;
-                }
+                const user = users.find((u) => u.username === username && u.password === password);
+                
+                user ? user : null;
             }
         }),
     ],

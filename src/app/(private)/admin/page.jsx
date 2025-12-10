@@ -1,7 +1,9 @@
 "use client";
 
-import {useEffect, useState, useRef, useCallback} from "react";
-import {Html5QrcodeScanner} from "html5-qrcode";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const StatusModal = ({message, type, onClose}) => {
     const isSuccess = type === "success";
@@ -34,6 +36,10 @@ export default function QRScannerPage() {
     const [scanResult, setScanResult] = useState(null);
     const [isScanning, setIsScanning] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const {data: session, status} = useSession();
+
+    const router = useRouter();
 
     const [modal, setModal] = useState({
         show: false,
@@ -150,12 +156,23 @@ export default function QRScannerPage() {
         };
     }, [stopScanning]);
 
-    const primaryColor = "#7209b7";
-    const secondaryColor = "#f72585";
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push('/auth');
+            router.refresh();
+        } else {
+            if (session !== undefined && session?.user.role !== 'admin') {
+                router.push('/auth');
+                router.refresh();
+            }
+        }
+    }, [router, session, status, session?.user.role]);
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 sm:p-8">
-            <h1 className="font-extrabold text-4xl mb-10 text-gray-800" style={{color: primaryColor}}>
+            <button onClick={() => signOut({ callbackUrl: '/auth' })} className="flex flex-row gap-2 text-white font-medium py-2 px-4 rounded-md bg-red-500 self-start my-6 hover:bg-red-400 active:opacity-80 transition duration-100">Logout</button>
+
+            <h1 className="font-extrabold text-4xl mb-10 text-[#7209b7]">
                 🎟️ Verifikasi Tiket Peserta
             </h1>
 
@@ -176,8 +193,7 @@ export default function QRScannerPage() {
                         </p>
                         <button
                             onClick={startScanning}
-                            style={{backgroundColor: secondaryColor}}
-                            className="w-full py-3 px-4 rounded-lg text-white font-semibold text-lg hover:shadow-lg hover:opacity-90 transition duration-300 transform hover:scale-[1.01]"
+                            className="w-full bg-[#f72585] py-3 px-4 rounded-lg text-white font-semibold text-lg hover:shadow-lg hover:opacity-90 active:opacity-80 transition duration-100 transform hover:scale-[1.01]"
                         >
                             Mulai Scanning
                         </button>
@@ -188,8 +204,10 @@ export default function QRScannerPage() {
 
                         </div>
 
-                        <button onClick={stopScanning}
-                                className="w-full py-2 px-4 rounded-lg bg-gray-500 text-white font-medium hover:bg-gray-600 transition duration-200">
+                        <button
+                            disabled={loading}
+                            onClick={stopScanning}
+                            className="w-full py-3 px-4 rounded-lg bg-gray-500 text-white font-semibold text-lg hover:bg-gray-600 active:opacity-80 transition duration-100 disabled:bg-gray-300">
                             Hentikan Scanning
                         </button>
                     </div>
@@ -201,7 +219,7 @@ export default function QRScannerPage() {
                     {scanResult && !loading && (
                         <div className="mt-5 p-4 bg-purple-50 border-l-4 border-purple-500 rounded-md text-gray-800">
                             <strong className="text-purple-700">ID Tiket Terakhir Diverifikasi:</strong>
-                            <p className="mt-1 font-mono break-words text-sm">{scanResult}</p>
+                            <p className="mt-1 font-mono wrap-break-word text-sm">{scanResult}</p>
                         </div>
                     )}
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { IoMenu } from "react-icons/io5";
+import { IoClose, IoMenu } from "react-icons/io5";
 
 export default function Header() {
   const [navOpened, setNavOpened] = useState(false);
@@ -11,59 +11,68 @@ export default function Header() {
     <>
       {/* OVERLAY */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-xs transition-opacity duration-300 ${
           navOpened
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setNavOpened(false)}
-      >
-      </div>
+      ></div>
 
       {/* MOBILE MENU */}
       <div
         className={`fixed top-0 right-0 z-40 h-full w-2/3 max-w-xs bg-white shadow-xl 
           transform transition-transform duration-300 
-          flex flex-col gap-4 p-6 font-rose
+          flex flex-col px-6 font-rose
           ${navOpened ? "translate-x-0" : "translate-x-full"}`}
       >
-        <h2 className="text-2xl font-semibold mb-4">Menu</h2>
+        <div className="flex py-6 justify-between items-center">
+          <h2 className="text-2xl font-semibold">Menu</h2>
 
-        <Link
-          href={"/"}
-          onClick={() => setNavOpened(false)}
-          className="hover:underline"
-        >
-          Populer
-        </Link>
-        <Link
-          href={"/"}
-          onClick={() => setNavOpened(false)}
-          className="hover:underline"
-        >
-          Terbaru
-        </Link>
-        <Link
-          href={"/"}
-          onClick={() => setNavOpened(false)}
-          className="hover:underline"
-        >
-          Konser
-        </Link>
-        <Link
-          href={"/"}
-          onClick={() => setNavOpened(false)}
-          className="hover:underline"
-        >
-          Talkshow
-        </Link>
-        <Link
-          href={"/"}
-          onClick={() => setNavOpened(false)}
-          className="hover:underline"
-        >
-          Olahraga
-        </Link>
+          <IoClose className="size-6 " onClick={() => setNavOpened(false)} />
+        </div>
+
+        <nav className="flex flex-col gap-4">
+          <Link
+            href={"/"}
+            onClick={() => setNavOpened(false)}
+            className="hover:underline"
+          >
+            Populer
+          </Link>
+          <Link
+            href={"/"}
+            onClick={() => setNavOpened(false)}
+            className="hover:underline"
+          >
+            Terbaru
+          </Link>
+          <Link
+            href={"/"}
+            onClick={() => setNavOpened(false)}
+            className="hover:underline"
+          >
+            Konser
+          </Link>
+          <Link
+            href={"/"}
+            onClick={() => setNavOpened(false)}
+            className="hover:underline"
+          >
+            Talkshow
+          </Link>
+          <Link
+            href={"/"}
+            onClick={() => setNavOpened(false)}
+            className="hover:underline"
+          >
+            Olahraga
+          </Link>
+        </nav>
+      
+        <button className="mt-6 px-4 py-2 bg-primary text-white rounded-lg">
+            Login
+        </button>
       </div>
 
       {/* HEADER */}

@@ -13,12 +13,11 @@ const redRose = Red_Rose({
 });
 
 export const metadata = {
-  title: "Ticket Order",
+  title: "ticken",
   description: "Order your event ticket now",
 };
 
 export default function RootLayout({ children }) {
-
   return (
     <html lang="en">
       <body className={`${lexend.variable} ${redRose.variable} antialiased`}>

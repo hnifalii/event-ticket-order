@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 async function getEvents() {
   const res = await fetch("http://localhost:3000/api/tickets", {
-    next: { revalidate: 60 },
+    next: { revalidate: 10 },
   });
   return res.json();
 }
@@ -15,25 +15,28 @@ export default async function Home() {
 
   return (
     <main className="w-full">
+
       {/* Hero section */}
       <section id="hero" className="relative w-full flex justify-center">
-        <Image src={HeroBg} alt="" className="w-full z-0" />
+        <Image src={HeroBg} alt="" className="w-full z-0" draggable="false"/>
 
-        <h1 className="absolute top-1/4 text-lg md:text-3xl lg:text-5xl text-primary font-rose font-semibold">
+        <h1 className="absolute top-1/8 md:top-1/4 w-1/2 md:w-fit text-xl md:text-3xl lg:text-5xl text-primary text-center font-rose font-semibold">
           Event eksklusif, momen berharga.
         </h1>
       </section>
 
+
       {/* Content: Upcoming events */}
       <section
         id="popular"
-        className="relative w-full flex flex-col justify-center items-center px-4 md:px-24 py-24"
+        className="relative w-full flex flex-col justify-center items-center px-4 md:px-24 py-4 md:py-24"
       >
         {/* <div className="absolute -top-1/12 w-2/3 bg-secondary rounded-xl">
           <input type="text" className="py-2" />
         </div> */}
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        {/* Events List */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
             <TicketCard key={event.event_id} event={event} />
           ))}

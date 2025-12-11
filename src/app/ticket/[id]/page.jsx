@@ -1,9 +1,9 @@
-import { tickets } from "@/data/tickets";
+import Image from "next/image";
 import Link from "next/link";
 
 async function getEvents() {
   const res = await fetch("http://localhost:3000/api/tickets", {
-    next: { revalidate: 60 },
+    next: { revalidate: 10 },
   });
   return res.json();
 }
@@ -15,7 +15,7 @@ export default async function TicketDetail({ params }) {
 
   const event = events.find((evn) => evn.event_id == id);
 
-  console.log(event)
+  console.log(event);
 
   if (!event) {
     return (
@@ -24,21 +24,41 @@ export default async function TicketDetail({ params }) {
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold">{event.name}</h1>
-      <p className="mt-2 text-gray-700">{event.desc}</p>
+    <main className="w-full px-72 p-6">
+      <div className="p-4 rounded-lg bg-[#e5bdff]">
+        <img
+          src={event.img}
+          className="w-full aspect-3/1 rounded-lg overflow-hidden object-cover object-center border-2"
+          alt="ticket image"
+        />
+      </div>
+
+      <div className="flex flex-col py-4 gap-4">
+        <h1 className="text-3xl font-medium">{event.name}</h1>
+        <p className="text-gray-700">{event.desc}</p>
+      </div>
+
+      <div className="gird grid-cols-2 gap-4">
+        {/* {event.price.map((ticket) => {
+          <div className="">
+
+          </div>
+        })} */}
+      </div>
 
       <div className="mt-6 p-4 border rounded bg-white shadow">
         <h3 className="font-semibold">Price</h3>
 
-        {typeof event.price === "string" ? (
+        {!event.price.vip ? (
           <p className="text-blue-600 mt-2">
-            Rp{Number(event.price).toLocaleString('id-ID')}
+            Rp{Number(event.price.reg).toLocaleString("id-ID")}
           </p>
         ) : (
           <ul className="text-blue-600 mt-2 space-y-1">
-            <li>Regular: Rp{Number(event.price.reg).toLocaleString('id-ID')}</li>
-            <li>VIP: Rp{Number(event.price.vip).toLocaleString('id-ID')}</li>
+            <li>
+              Reguler: Rp{Number(event.price.reg).toLocaleString("id-ID")}
+            </li>
+            <li>VIP: Rp{Number(event.price.vip).toLocaleString("id-ID")}</li>
           </ul>
         )}
       </div>

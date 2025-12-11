@@ -20,33 +20,38 @@ export async function GET() {
 
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.SHEET_ID,
-      range: "events!A2:I",
+      range: "events!A2:L",
     });
 
     const rows = response.data.values;
 
     const events = rows.map((row) => {
-      const type = row[3]; // get ticket type (single/tiered)
-      const regPrice = Number(row[4]) || 0;
-      const vipPrice = Number(row[5]) || 0;
+      const img = row[1]
+
+      const type = row[5]; // get ticket type (single/tiered)
+      const regPrice = Number(row[6]) || 0;
+      const vipPrice = Number(row[7]) || 0;
 
       let price;
 
       if (type === "single") {
-        price = row[4];
+        price = { reg: regPrice };
       } else if (type === "tiered") {
         price = { reg: regPrice, vip: vipPrice };
       }
 
       return {
         event_id: row[0],
-        name: row[1],
-        desc: row[2],
+        img,
+        name: row[2],
+        desc: row[3],
+        location: row[4],
         type,
         price,
-        date: row[6],
-        time_start: row[7],
-        time_end: row[8],
+        date: row[8],
+        time_start: row[9],
+        time_end: row[10],
+        event_handle: row[11],
       };
     });
 

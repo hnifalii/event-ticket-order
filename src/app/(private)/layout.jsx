@@ -2,6 +2,6 @@
 
 import { SessionProvider } from "next-auth/react";
 
-export default function PrivateLayout({ children }) {
+export default function Layout({ children }) {
     return <SessionProvider>{children}</SessionProvider>
 }

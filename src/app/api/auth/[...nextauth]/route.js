@@ -18,9 +18,13 @@ const authOptions = {
             async authorize(credentials) {
                 const {username, password} = credentials;
 
-                const user = users.find((u) => u.username === username && u.password === password);
-                
-                user ? user : null;
+                const user = users.find((u) => username === u.username && password === u.password);
+
+                if (user != null) {
+                    return user;
+                } else {
+                    return null;
+                }
             }
         }),
     ],

@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
 
@@ -63,7 +63,7 @@ const LoadingSpinner = () => (
     </div>
 );
 
-export default function LoginCard() {
+export default function Page() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -82,14 +82,32 @@ export default function LoginCard() {
             redirect: false,
         });
 
+        const session = await getSession();
+
         if (result?.error) {
             setError("Username atau password salah!");
             setLoading(false);
             router.push('/auth');
             router.refresh();
         } else {
-            router.push('/admin');
-            router.refresh();
+            if (session != null) {
+                switch (session?.user.role) {
+                    case 'admin':
+                        router.push('/admin');
+                        router.refresh();
+                        break;
+                    case 'committee':
+                        router.push('/committee');
+                        router.refresh();
+                        break;
+                    default:
+                        router.push('/');
+                        router.refresh();
+                }
+            } else {
+                router.push('/auth');
+                router.refresh();
+            }
         }
     };
 
@@ -140,7 +158,7 @@ export default function LoginCard() {
                             type="submit"
                             className="w-full flex justify-center py-2 px-4 bg-[#f72585] border border-transparent rounded-md shadow-sm font-semibold text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-100 transform hover:scale-[1.005] active:opacity-80 disabled:bg-gray-600"
                         >
-                            {!loading ? 'Log In' : <LoadingSpinner/>}
+                            {loading ? <LoadingSpinner/> : 'Log In'}
                         </button>
                     </div>
 
@@ -148,7 +166,7 @@ export default function LoginCard() {
 
                 <div className="mt-6">
                     <p className="text-center text-xs text-gray-400">
-                        Hanya untuk penggunaan internal panitia.
+                        Hanya untuk penggunaan internal.
                     </p>
                 </div>
             </div>

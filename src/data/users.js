@@ -18,7 +18,7 @@ export const users = [
         username: 'panitia1',
         password: 'rahasia',
         name: 'Panitia 1',
-        role: 'committee',
+        role: 'organizer',
         eventId: '1',
     },
     {
@@ -26,7 +26,7 @@ export const users = [
         username: 'panitia2',
         password: 'rahasia',
         name: 'Panitia 2',
-        role: 'committee',
+        role: 'organizer',
         eventId: '1',
     },
 ];

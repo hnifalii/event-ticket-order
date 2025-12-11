@@ -96,8 +96,8 @@ export default function Page() {
                         router.push('/admin');
                         router.refresh();
                         break;
-                    case 'committee':
-                        router.push('/committee');
+                    case 'organizer':
+                        router.push('/organizer');
                         router.refresh();
                         break;
                     default:

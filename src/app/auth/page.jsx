@@ -1,8 +1,9 @@
 "use client";
 
-import { getSession, signIn, useSession } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const EyeIcon = (props) => (
   <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +36,6 @@ const PasswordToggleInput = ({ label = "Password", name = "password", value, onC
                     type={inputType}
                     value={value}
                     onChange={onChange}
-                    required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
                 />
                 
@@ -59,8 +59,11 @@ const PasswordToggleInput = ({ label = "Password", name = "password", value, onC
 const LoadingSpinner = () => (
     <div className="flex items-center justify-center">
         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-        <p className="ml-3 text-white font-semibold">Memproses data...</p>
     </div>
+);
+
+const ErrorMessage = ({ message }) => (
+    <p className="text-red-500 text-sm p-3 bg-red-100 rounded-sm border-s-[3px]">{message}</p>
 );
 
 export default function Page() {
@@ -75,6 +78,18 @@ export default function Page() {
         e.preventDefault();
         setError("");
         setLoading(true);
+
+        if (username == "" || password == "") {
+            setError("Mohon isi semua field yang tersedia!");
+            setLoading(false);
+            return;
+        }
+
+        if (password.length < 8) {
+            setError("Panjang minimal password adalah 8");
+            setLoading(false);
+            return;
+        }
 
         const result = await signIn("credentials", {
             username,
@@ -95,14 +110,17 @@ export default function Page() {
                     case 'admin':
                         router.push('/admin');
                         router.refresh();
+                        toast.success('Berhasil Login');
                         break;
                     case 'organizer':
                         router.push('/organizer');
                         router.refresh();
+                        toast.success('Berhasil Login');
                         break;
                     default:
                         router.push('/');
                         router.refresh();
+                        toast.success('Berhasil Login');
                 }
             } else {
                 router.push('/auth');
@@ -113,8 +131,7 @@ export default function Page() {
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <div className="w-full max-w-sm bg-white p-8 rounded-2xl shadow-2xl border-t-8 border-t-[#f72585] transition duration-300">
-                
+            <div className="w-full max-w-sm bg-white p-8 rounded-2xl shadow-2xl border-t-4 border-t-[#f72585] transition duration-300">
                 <div className="mb-8 text-center">
                     <h2 className="text-3xl font-extrabold text-[#7209b7]">
                         Selamat Datang!
@@ -136,7 +153,6 @@ export default function Page() {
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                required
                                 autoFocus
                                 className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 outline-[#7209b7] focus:outline-none focus:ring-2 focus:ring-[#7209b7] sm:text-sm transition duration-150"
                             />
@@ -150,7 +166,7 @@ export default function Page() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
-                    {error && <p className="text-red-500 text-sm p-3 bg-red-100 rounded-sm border-s-[3px]">{error}</p>}
+                    {error && <ErrorMessage message={error} />}
                     
                     <div>
                         <button

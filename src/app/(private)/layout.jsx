@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoMdMenu } from "react-icons/io";
+import ToastProviders from "../toastProviders";
 
 const Header = () => {
   const [navOpened, setNavOpened] = useState(false);
@@ -34,12 +35,14 @@ const Header = () => {
 
       {/* MOBILE MENU */}
       <div
-        className={`fixed top-0 right-0 z-40 h-full w-2/3 max-w-xs bg-white shadow-xl 
+        className={`fixed top-0 right-0 z-40 min-h-screen w-2/3 max-w-xs bg-white shadow-xl 
           transform transition-transform duration-300 
           flex flex-col gap-4 p-6 font-rose
           ${navOpened ? "translate-x-0" : "translate-x-full"}`}
       >
-        <h2 className="text-2xl font-semibold mb-4">Menu</h2>
+        <h2 className="text-2xl font-semibold">Admin Menu</h2>
+
+        <hr className="opacity-20" />
 
         <Link
           href={"/admin/add-event"}
@@ -55,6 +58,13 @@ const Header = () => {
         >
           Add Organizer
         </Link>
+        <Link
+          href={"/admin/profile"}
+          onClick={() => setNavOpened(false)}
+          className="hover:underline"
+        >
+          My Profile
+        </Link>
 
         <button onClick={handleSignOut} disabled={loading} className="self-baseline py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100">
             {loading ? 'Tunggu...' : 'Logout'}
@@ -68,6 +78,7 @@ const Header = () => {
         <div className="hidden md:flex flex-row gap-4">
             <Link href="/admin/add-event" className="hover:opacity-80 active:text-gray-900 transition duration-200">Add Event</Link>
             <Link href="/admin/add-organizer" className="hover:opacity-80 active:text-gray-900 transition duration-200">Add Organizer</Link>
+            <Link href="/admin/profile" className="hover:opacity-80 active:text-gray-900 transition duration-200">My Profile</Link>
         </div>
 
         <button onClick={handleSignOut} disabled={loading} className="hidden md:block self-end py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100">
@@ -90,7 +101,9 @@ export default function Layout({ children }) {
   return (
     <SessionProvider>
       {!hideHeader && <Header/>}
-      {children}
+      <ToastProviders>
+        {children}
+      </ToastProviders>
     </SessionProvider>
   );
 }

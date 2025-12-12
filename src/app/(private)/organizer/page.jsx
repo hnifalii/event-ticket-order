@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { ToastContainer } from "react-toastify";
 
 const StatusModal = ({message, type, onClose}) => {
     const isSuccess = type === "success";

@@ -26,7 +26,7 @@ export async function GET() {
     const rows = response.data.values;
 
     const events = rows.map((row) => {
-      const img = row[1]
+      const img = row[1];
 
       const type = row[5]; // get ticket type (single/tiered)
       const regPrice = Number(row[6]) || 0;
@@ -34,7 +34,9 @@ export async function GET() {
 
       let price;
 
-      if (type === "single") {
+      if (type === "gratis") {
+        price = 0
+      } else if (type === "single") {
         price = { reg: regPrice };
       } else if (type === "tiered") {
         price = { reg: regPrice, vip: vipPrice };

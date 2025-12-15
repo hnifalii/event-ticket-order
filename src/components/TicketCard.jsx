@@ -6,11 +6,11 @@ import { IoLocationOutline } from "react-icons/io5";
 export default function TicketCard({ event }) {
   const { event_id, name, desc, price, date } = event;
 
-  const parsedDate = parseDMY(date);
+  const parsedDate = parseDMY(date) ?? "not found";
 
   return (
     <Link href={`/ticket/${event_id}`} className="">
-      <div className="h-full flex flex-col bg-white rounded-lg shadow hover:shadow-lg transition active:opacity-80">
+      <div className="h-full flex flex-col bg-white rounded-lg shadow hover:shadow-lg active:opacity-80 transition duration-300">
         {/* Image */}
         <div className="rounded-t-lg aspect-2/1 overflow-hidden">
           <img
@@ -25,9 +25,9 @@ export default function TicketCard({ event }) {
           {/* Event date */}
           <div className="flex flex-col items-center px-4 my-auto">
             <div className="text-gray-600">
-              {parsedDate.date.toLocaleString("id-ID", { month: "short" })}
+              {parsedDate?.date.toLocaleString("id-ID", { month: "short" })}
             </div>
-            <div className="text-secondary text-2xl">{parsedDate.day}</div>
+            <div className="text-secondary text-2xl">{parsedDate?.day}</div>
             {/* <div className="text-gray-600">{parsedDate.year}</div> */}
           </div>
 
@@ -45,7 +45,9 @@ export default function TicketCard({ event }) {
               <p className="text-sm">{event.location}</p>
             </div>
 
-            {!price.vip ? (
+            {price === 0 ? (
+              <p className="text-primary text-xl">Gratis</p>
+            ) : !price.vip ? (
               <p className="text-primary text-xl">
                 IDR {Number(price.reg).toLocaleString("id-ID")}
               </p>

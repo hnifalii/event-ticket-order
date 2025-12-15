@@ -2,6 +2,7 @@ import TicketCard from "@/components/TicketCard";
 import Image from "next/image";
 import HeroBg from "@/assets/hero-bg.png";
 import { Suspense } from "react";
+import TicketCardLoading from "@/components/placeholder/TicketCardLoading";
 
 async function getEvents() {
   const res = await fetch("http://localhost:3000/api/tickets", {
@@ -15,16 +16,14 @@ export default async function Home() {
 
   return (
     <main className="w-full">
-
       {/* Hero section */}
       <section id="hero" className="relative w-full flex justify-center">
-        <Image src={HeroBg} alt="" className="w-full z-0" draggable="false"/>
+        <Image src={HeroBg} alt="" className="w-full z-0" draggable="false" />
 
         <h1 className="absolute top-1/8 md:top-1/4 w-1/2 md:w-fit text-xl md:text-3xl lg:text-5xl text-primary text-center font-rose font-semibold">
           Event eksklusif, momen berharga.
         </h1>
       </section>
-
 
       {/* Content: Upcoming events */}
       <section
@@ -36,14 +35,19 @@ export default async function Home() {
         </div> */}
 
         {/* Events List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((event) => (
-            <TicketCard key={event.event_id} event={event} />
-          ))}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Suspense
+            fallback={Array.from({ length: 6 }).map((_, i) => (
+              <TicketCardLoading key={i} />
+            ))}
+          >
+            {events.map((event) => (
+              <TicketCard key={event.event_id} event={event} />
+              // <TicketCardLoading key={event.event_id} />
+            ))}
+          </Suspense>
         </div>
       </section>
-
-
 
       {/* <h1 className="text-3xl font-bold mb-6">Event Tickets</h1>
 

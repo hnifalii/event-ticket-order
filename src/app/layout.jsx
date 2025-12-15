@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import "./globals.css";
+import "@/app/globals.css";
 import { Lexend, Red_Rose } from "next/font/google";
 import Footer from "@/components/Footer";
 const lexend = Lexend({

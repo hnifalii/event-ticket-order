@@ -24,12 +24,12 @@ export default async function TicketDetail({ params }) {
   }
 
   return (
-    <main className="w-full px-72 p-6">
+    <main className="w-full px-48 p-6">
       <div className="p-4 rounded-lg bg-[#e5bdff]">
         <img
           src={event.img}
           className="w-full aspect-3/1 rounded-lg overflow-hidden object-cover object-center border-2"
-          alt="ticket image"
+          alt="event image"
         />
       </div>
 
@@ -49,7 +49,11 @@ export default async function TicketDetail({ params }) {
       <div className="mt-6 p-4 border rounded bg-white shadow">
         <h3 className="font-semibold">Price</h3>
 
-        {!event.price.vip ? (
+        {event.price === 0 ? (
+          <p className="text-blue-600 mt-2">
+            Gratis
+          </p>
+        ) : !event.price.vip ? (
           <p className="text-blue-600 mt-2">
             Rp{Number(event.price.reg).toLocaleString("id-ID")}
           </p>
@@ -70,5 +74,40 @@ export default async function TicketDetail({ params }) {
         Order Ticket
       </Link>
     </main>
+
+    // <main className="w-full px-72 p-6 animate-pulse">
+    //   <div className="p-4 rounded-lg bg-[#e5bdff]">
+    //     <div className="w-full aspect-3/1 rounded-lg overflow-hidden object-cover object-center border-2 bg-linear-to-br from-gray-200 to-gray-100" />
+    //   </div>
+
+    //   <div className="flex flex-col py-4 gap-4">
+    //     <div className="w-1/3 h-8 bg-gray-300 rounded-md"></div>
+    //     <div className="h-12 bg-gray-300 rounded-md"></div>
+    //   </div>
+
+    //   <div className="mt-6 p-4 border rounded bg-white shadow">
+    //     <h3 className="font-semibold">Price</h3>
+
+    //     {event.price === 0 ? (
+    //       <p className="text-blue-600 mt-2">Gratis</p>
+    //     ) : !event.price.vip ? (
+    //       <p className="text-blue-600 mt-2">
+    //         Rp{Number(event.price.reg).toLocaleString("id-ID")}
+    //       </p>
+    //     ) : (
+    //       <ul className="text-blue-600 mt-2 space-y-1">
+    //         <li>
+    //           Reguler: Rp{Number(event.price.reg).toLocaleString("id-ID")}
+    //         </li>
+    //         <li>VIP: Rp{Number(event.price.vip).toLocaleString("id-ID")}</li>
+    //       </ul>
+    //     )}
+    //   </div>
+
+    //   <div
+    //     className="w-1/5 h-12 inline-block mt-6 bg-gray-200 rounded"
+    //   >
+    //   </div>
+    // </main>
   );
 }

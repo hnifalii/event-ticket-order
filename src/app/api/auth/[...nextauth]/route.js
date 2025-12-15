@@ -31,6 +31,7 @@ const authOptions = {
     callbacks: {
         async jwt({ token, account, profile, user }) {
             if (account?.provider === "credentials") {
+                token.id = user.id;
                 token.username = user.username;
                 token.fullname = user.fullname;
                 token.role = user.role;
@@ -39,6 +40,10 @@ const authOptions = {
         },
 
         async session({ session, token }) {
+            if ("id" in token) {
+                session.user.id = token.id;
+            }
+
             if ("username" in token) {
                 session.user.username = token.username;
             }

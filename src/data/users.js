@@ -27,4 +27,18 @@ export const users = [
         name: 'Panitia 2',
         role: 'organizer',
     },
+    {
+        id: 5,
+        username: 'panitia3',
+        password: 'rahasia123',
+        name: 'Panitia 2',
+        role: 'organizer',
+    },
+    {
+        id: 6,
+        username: 'panitia4',
+        password: 'rahasia123',
+        name: 'Panitia 4',
+        role: 'organizer',
+    },
 ];

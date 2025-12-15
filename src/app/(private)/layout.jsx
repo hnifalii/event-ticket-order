@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { SessionProvider, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -6,19 +6,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoMdMenu } from "react-icons/io";
 import ToastProviders from "../toastProviders";
+import NextTopLoader from "nextjs-toploader";
 
 const Header = () => {
   const [navOpened, setNavOpened] = useState(false);
   const [loading, setLoading] = useState(false);
 
-    const router = useRouter();
+  const router = useRouter();
 
-    const handleSignOut = () => {
-        setLoading(true);
+  const handleSignOut = () => {
+    setLoading(true);
 
-        signOut({ redirect: false });
-        router.push('/auth');
-    };
+    signOut({ redirect: false });
+    router.push("/auth");
+  };
 
   return (
     <>
@@ -30,8 +31,7 @@ const Header = () => {
             : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setNavOpened(false)}
-      >
-      </div>
+      ></div>
 
       {/* MOBILE MENU */}
       <div
@@ -49,14 +49,7 @@ const Header = () => {
           onClick={() => setNavOpened(false)}
           className="hover:underline"
         >
-            Add Event
-        </Link>
-        <Link
-          href={"/admin/add-organizer"}
-          onClick={() => setNavOpened(false)}
-          className="hover:underline"
-        >
-          Add Organizer
+          Add Event
         </Link>
         <Link
           href={"/admin/profile"}
@@ -66,23 +59,42 @@ const Header = () => {
           My Profile
         </Link>
 
-        <button onClick={handleSignOut} disabled={loading} className="self-baseline py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100">
-            {loading ? 'Tunggu...' : 'Logout'}
+        <button
+          onClick={handleSignOut}
+          disabled={loading}
+          className="self-baseline py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100"
+        >
+          {loading ? "Tunggu..." : "Logout"}
         </button>
       </div>
 
       {/* HEADER */}
       <header className="sticky top-0 z-30 w-full flex px-6 md:px-24 py-4 justify-between items-center shadow-xs bg-white">
-        <Link href="/admin" className="font-semibold text-lg">Admin</Link>
+        <Link href="/admin" className="font-semibold text-lg">
+          Admin
+        </Link>
 
         <div className="hidden md:flex flex-row gap-4">
-            <Link href="/admin/add-event" className="hover:opacity-80 active:text-gray-900 transition duration-200">Add Event</Link>
-            <Link href="/admin/add-organizer" className="hover:opacity-80 active:text-gray-900 transition duration-200">Add Organizer</Link>
-            <Link href="/admin/profile" className="hover:opacity-80 active:text-gray-900 transition duration-200">My Profile</Link>
+          <Link
+            href="/admin/add-event"
+            className="hover:opacity-80 active:text-gray-900 transition duration-200"
+          >
+            Add Event
+          </Link>
+          <Link
+            href="/admin/profile"
+            className="hover:opacity-80 active:text-gray-900 transition duration-200"
+          >
+            My Profile
+          </Link>
         </div>
 
-        <button onClick={handleSignOut} disabled={loading} className="hidden md:block self-end py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100">
-            {loading ? 'Tunggu...' : 'Logout'}
+        <button
+          onClick={handleSignOut}
+          disabled={loading}
+          className="hidden md:block self-end py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100"
+        >
+          {loading ? "Tunggu..." : "Logout"}
         </button>
 
         <button className="block md:hidden" onClick={() => setNavOpened(true)}>
@@ -91,19 +103,96 @@ const Header = () => {
       </header>
     </>
   );
-}
+};
+
+const Footer = () => {
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    setLoading(true);
+
+    signOut({ redirect: false });
+    router.push("/auth");
+  };
+
+  return (
+    <footer className="w-full flex flex-col pt-12 mt-20 bg-[#7209b7] text-white">
+      <div className="flex flex-col lg:flex-row px-6 md:px-12 lg:px-24 pb-12 gap-10 lg:gap-8 justify-between">
+        <div className="flex flex-col gap-2">
+          <h2 className="flex-1 text-3xl font-semibold font-rose text-white">
+            ticken <span className="text-xl">(Admin)</span>
+          </h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita et eos nihil totam sequi provident debitis voluptatum id iusto veniam!</p>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h6 className="text-xl font-medium">Links</h6>
+
+          <Link href="/admin" className="hover:underline">
+            My Events
+          </Link>
+          <Link href="/admin/add-event" className="hover:underline">
+            Add New Event
+          </Link>
+          <Link href="/admin/profile" className="hover:underline">
+            My Profile
+          </Link>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h6 className="text-xl font-medium">Action</h6>
+
+          {!loading ? (
+            <button onClick={handleSignOut} className="hover:underline w-fit">
+              Logout
+            </button>
+          ) : (
+            <h1>Tunggu...</h1>
+          )}
+        </div>
+      </div>
+
+      {/* BOTTOM SECTION */}
+      <div className="w-full flex flex-col md:flex-row px-6 md:px-12 lg:px-24 py-6 gap-4 md:gap-0 justify-between items-center border-t border-white">
+        <div className="flex gap-2">
+          <div className="size-2 rounded-full bg-white"></div>
+          <div className="size-2 rounded-full bg-white"></div>
+          <div className="size-2 rounded-full bg-white"></div>
+        </div>
+
+        <h6 className="text-white font-medium text-center">
+          &copy;2025. Ticken.
+        </h6>
+      </div>
+    </footer>
+  );
+};
 
 export default function Layout({ children }) {
   const pathname = usePathname();
 
   const hideHeader = ["/organizer"].includes(pathname);
+  const hideFooter = ["/organizer"].includes(pathname);
 
   return (
     <SessionProvider>
-      {!hideHeader && <Header/>}
+      {!hideHeader && <Header />}
       <ToastProviders>
+        <NextTopLoader
+          color="#7209b7"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+        />
         {children}
       </ToastProviders>
+      {!hideFooter && <Footer />}
     </SessionProvider>
   );
 }

@@ -1,12 +1,12 @@
 import { google } from "googleapis";
 
-console.log("API call hit: /api/tickets")
-let cacheCount = 0
+console.log("API call hit: /api/tickets");
+let cacheCount = 0;
 
 export async function GET() {
   console.log("Calling Google Sheets API...");
-  cacheCount++
-  console.log("Google API call:", cacheCount)
+  cacheCount++;
+  console.log("Google API call:", cacheCount);
   try {
     const auth = new google.auth.GoogleAuth({
       credentials: {
@@ -18,29 +18,65 @@ export async function GET() {
 
     const sheets = google.sheets({ version: "v4", auth });
 
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.SHEET_ID,
-      range: "events!A2:G",
+    // Fetch events
+    const eventsRes = await sheets.spreadsheets.values.get({
+      spreadsheetId: process.env.SPREADSHEET_ID,
+      range: "events!A2:L",
     });
 
+    // Fetch event-tickets
+    const ticketsRes = await sheets.spreadsheets.values.get({
+      spreadsheetId: process.env.SPREADSHEET_ID,
+      range: "event-tickets!A2:F",
+    });
 
+    const eventRows = eventsRes.data.values || [];
+    const ticketRows = ticketsRes.data.values || [];
 
-    const rows = response.data.values;
+    // Tickets for corresponding event
+    const ticketsByEvent = {};
 
-    const events = rows.map((row) => ({
-      id: row[0],
-      name: row[1],
-      desc: row[2],
-      price: row[3],
-      date: row[4],
-      time_start: row[5],
-      time_end: row[6],
-    }));
+    // Getting and mapping tickets
+    ticketRows.forEach((row) => {
+      const eventId = row[1];
+
+      if (!ticketsByEvent[eventId]) {
+        ticketsByEvent[eventId] = [];
+      }
+
+      ticketsByEvent[eventId].push({
+        ticket_id: row[0],
+        name: row[2],
+        price: row[3],
+        desc: row[4],
+        stock: row[5],
+      });
+    });
+
+    // Getting events, joined with tickets
+    const events = eventRows.map((row) => {
+
+      return {
+        event_id: row[0],
+        img: row[1],
+        name: row[2],
+        desc: row[3],
+        location: row[4],
+        tickets: ticketsByEvent[row[0]] || [],
+        ticket_type: row[5],
+        date: row[7],
+        time_start: row[8],
+        time_end: row[9],
+        event_handle: row[10],
+      };
+    });
 
     return Response.json(events);
   } catch (error) {
-    console.error("GOOGLE API ERROR:", error)
+    console.error("GOOGLE API ERROR:", error);
     return Response.json(
-        { message: "Google Sheets Error", error: String(error) }, { status: 500 });
+      { message: "Google Sheets Error", error: String(error) },
+      { status: 500 }
+    );
   }
 }

@@ -1,60 +1,93 @@
-"use client";
+import Image from "next/image";
+import Link from "next/link";
 
-import { eventOrganizers } from "@/data/eventOrganizers";
-import { users } from "@/data/users";
-import { useSession } from "next-auth/react";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+async function getEvents() {
+  const res = await fetch("http://localhost:3000/api/tickets", {
+    next: { revalidate: 10 },
+  });
+  return res.json();
+}
 
-export default function Page() {
-  const params = useParams();
+export default async function Page({ params }) {
+  const events = await getEvents();
 
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { id } = await params;
 
-  const organizers = eventOrganizers.filter((o) => o.eventId == params.id);
+  const event = events.find((e) => e.event_id == id);
 
-  const filteredUsers = organizers.map((o) =>
-    users.find((u) => u.id == o.userId)
-  );
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth");
-      router.refresh();
-    } else {
-      if (session !== undefined && session?.user.role !== "admin") {
-        router.push("/auth");
-        router.push();
-      }
-    }
-  }, [router, session, status, session?.user.role]);
-
-  return organizers != null ? (
+  return event != null ? (
     <div className="flex flex-col gap-5 px-6 py-6 md:px-24 md:py-8">
-      <h1 className="text-3xl font-medium">List Organizer</h1>
-      <p className="mt-2">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, iste.
-      </p>
-
-      {filteredUsers.length <= 0 ? (
-        <div className="flex flex-col gap-3">
-          <h1 className="font-medium">Daftar Panitia</h1>
-          {filteredUsers.map((u) => {
-            <div key={u.id} className="w-full py-3 px-4 rounded-md shadow-sm">
-              <h1 className="font-semibold">{u.name}</h1>
-            </div>;
-          })}
+      <h1 className="text-3xl font-semibold">Detail Event</h1>
+      <hr className="opacity-50" />
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium text-lg">Name</h2>
+          <p>{event.name}</p>
         </div>
-      ) : (
-        <div className="mx-auto py-10">
-          <h1 className="font-medium">Belum ada panitia terdaftar.</h1>
+        <Image
+          src={event.img}
+          alt={event.name}
+          className="object-cover rounded-md"
+          width={300}
+          height={300}
+        />
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium text-lg">Description</h2>
+          <p>{event.desc}</p>
         </div>
-      )}
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium text-lg">Location</h2>
+          <p>{event.location}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium text-lg">Ticket Type</h2>
+          <p>{event.ticket_type}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium text-lg">Ticket Prices</h2>
+          {event.tickets.map((t) => (
+            <div key={t.ticket_id} className="w-full px-4 py-2 rounded-md shadow-sm">
+              <h1 className="font-medium">{t.name}</h1>
+              <p>{t.desc}</p>
+              <p>Harga: Rp{t.price.toLocaleString()} | Stock: {t.stock}</p>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium text-lg">Date</h2>
+          <p>{event.date}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium text-lg">Time</h2>
+          <p>
+            {event.time_start} - {event.time_end}
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 p-5 rounded-lg outline-1 outline-gray-500/50">
+        <h1 className="text-xl font-medium">Tambah Panitia untuk Event Ini</h1>
+        <p className="font-thin">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, eius.
+        </p>
+        <div className="flex flex-row gap-4 mt-4">
+          <Link
+            href={`/admin/organizer/${event.event_id}`}
+            className="w-fit bg-[#f72585] active:bg-[#f72585]/80 hover:bg-[#f72585]/80 text-white font-semibold rounded-md py-2 px-3 transition duration-200"
+          >
+            Lihat Panitia
+          </Link>
+          <Link
+            href={`/admin/add-organizer?eventId=${event.id}`}
+            className="w-fit bg-[#f72585] active:bg-[#f72585]/80 hover:bg-[#f72585]/80 text-white font-semibold rounded-md py-2 px-3 transition duration-200"
+          >
+            Tambah Panitia
+          </Link>
+        </div>
+      </div>
     </div>
   ) : (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#7209b7]"></div>
+    <div className="min-h-screen flex flex-col justify-center items-center">
+      <h1 className="font-semibold text-2xl">Event Tidak Tersedia</h1>
     </div>
   );
 }

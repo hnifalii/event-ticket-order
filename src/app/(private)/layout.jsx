@@ -7,6 +7,7 @@ import { useState } from "react";
 import { IoMdMenu } from "react-icons/io";
 import ToastProviders from "../toastProviders";
 import NextTopLoader from "nextjs-toploader";
+import SessionWrapper from "./sessionWrapper";
 
 const Header = () => {
   const [navOpened, setNavOpened] = useState(false);
@@ -124,7 +125,10 @@ const Footer = () => {
           <h2 className="flex-1 text-3xl font-semibold font-rose text-white">
             ticken <span className="text-xl">(Admin)</span>
           </h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita et eos nihil totam sequi provident debitis voluptatum id iusto veniam!</p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita et
+            eos nihil totam sequi provident debitis voluptatum id iusto veniam!
+          </p>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -178,21 +182,23 @@ export default function Layout({ children }) {
 
   return (
     <SessionProvider>
-      {!hideHeader && <Header />}
-      <ToastProviders>
-        <NextTopLoader
-          color="#7209b7"
-          initialPosition={0.08}
-          crawlSpeed={200}
-          height={3}
-          crawl={true}
-          showSpinner={false}
-          easing="ease"
-          speed={200}
-        />
-        {children}
-      </ToastProviders>
-      {!hideFooter && <Footer />}
+      <SessionWrapper>
+        {!hideHeader && <Header />}
+        <ToastProviders>
+          <NextTopLoader
+            color="#7209b7"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={false}
+            easing="ease"
+            speed={200}
+          />
+          {children}
+        </ToastProviders>
+        {!hideFooter && <Footer />}
+      </SessionWrapper>
     </SessionProvider>
   );
 }

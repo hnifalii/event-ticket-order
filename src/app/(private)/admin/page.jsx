@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 async function getEvents() {
   const res = await fetch("http://localhost:3000/api/tickets", {
@@ -9,8 +11,13 @@ async function getEvents() {
 }
 
 export default async function Page() {
+  const session = await getServerSession(authOptions);
   const events = await getEvents();
-  console.log(events);
+  const myEvents = events.filter((e) => e.organizer == session?.user.id);
+  
+  console.log(session?.user.id);
+  
+  console.log(myEvents);
   
   return (
     <div className="flex flex-col justify-center gap-5 px-6 py-6 md:px-24 md:py-8">
@@ -41,8 +48,8 @@ export default async function Page() {
       <div className="flex flex-col items-center gap-3 mt-4">
         <h1 className="text-2xl font-medium self-start">Event Saya</h1>
         <div className="flex flex-col space-y-3 lg:grid lg:grid-cols-2 w-full">
-          {events.length > 0 ? (
-            events.map((e) => (
+          {myEvents.length > 0 ? (
+            myEvents.map((e) => (
               <div
                 key={e.event_id}
                 className="w-full max-w-sm sm:max-w-md md:max-w-lg shadow-md rounded-md p-4 flex flex-col gap-3 font-medium text-black mx-auto"
@@ -63,7 +70,7 @@ export default async function Page() {
               </div>
             ))
           ) : (
-            <div className="w-full flex items-center text-lg font-medium">
+            <div className="w-full flex justify-center text-lg font-medium py-8">
               <p>Belum ada event.</p>
             </div>
           )}

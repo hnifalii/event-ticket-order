@@ -1,8 +1,14 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { users } from "@/data/users";
 
-const authOptions = {
+async function getUsers() {
+    const res = await fetch("http://localhost:3000/api/users", {
+    next: { revalidate: 10 },
+  });
+  return res.json();
+}
+
+export const authOptions = {
     session: {
         strategy: 'jwt',
     },
@@ -18,6 +24,7 @@ const authOptions = {
             async authorize(credentials) {
                 const {username, password} = credentials;
 
+                const users = await getUsers();
                 const user = users.find((u) => username === u.username && password === u.password);
 
                 if (user != null) {

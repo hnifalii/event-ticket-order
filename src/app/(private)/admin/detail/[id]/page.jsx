@@ -19,7 +19,7 @@ export default async function Page({ params }) {
     <div className="flex flex-col gap-5 px-6 py-6 md:px-24 md:py-8">
       <h1 className="text-3xl font-semibold">Detail Event</h1>
       <hr className="opacity-50" />
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <h2 className="font-medium text-lg">Name</h2>
           <p>{event.name}</p>
@@ -46,10 +46,10 @@ export default async function Page({ params }) {
         <div className="flex flex-col gap-1">
           <h2 className="font-medium text-lg">Ticket Prices</h2>
           {event.tickets.map((t) => (
-            <div key={t.ticket_id} className="w-full px-4 py-2 rounded-md shadow-sm">
+            <div key={t.ticket_id} className="w-full p-3 border-b-[0.5px] border-b-black/40">
               <h1 className="font-medium">{t.name}</h1>
               <p>{t.desc}</p>
-              <p>Harga: Rp{t.price.toLocaleString()} | Stock: {t.stock}</p>
+              <p>Harga: Rp{t.price.toLocaleString()}</p>
             </div>
           ))}
         </div>

@@ -47,27 +47,28 @@ export async function GET() {
       ticketsByEvent[eventId].push({
         ticket_id: row[0],
         name: row[2],
-        price: row[3],
-        desc: row[4],
-        stock: row[5],
+        handle: row[3],
+        price: Number(row[4]),
+        desc: row[5],
+        stock: row[6],
       });
     });
 
     // Getting events, joined with tickets
     const events = eventRows.map((row) => {
-
       return {
         event_id: row[0],
         img: row[1],
         name: row[2],
         desc: row[3],
         location: row[4],
-        tickets: ticketsByEvent[row[0]] || [],
         ticket_type: row[5],
+        tickets: ticketsByEvent[row[0]] || [],
         date: row[7],
         time_start: row[8],
         time_end: row[9],
         event_handle: row[10],
+        organizer: row[11],
       };
     });
 

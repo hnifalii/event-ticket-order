@@ -13,17 +13,22 @@ export default async function Page({ params }) {
   console.log(organizers);
 
   return (
-    <div className="flex flex-col gap-5 px-6 py-6 md:px-24 md:py-8">
+    <div className="min-h-screen flex flex-col md:items-center lg:items-center gap-5 px-6 py-6 md:px-24 md:py-8">
       <h1 className="text-3xl font-semibold">Daftar Panitia</h1>
       <p className="mt-2">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, iste.
       </p>
 
       {organizers.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          {organizers.map((u) => (
-            <div key={u.id} className="w-full p-3 border-b-[0.5px] border-b-black/40">
-              <h1 className="font-medium">Nama : {u.name}</h1>
+        <div className="flex flex-col gap-3 w-full">
+          {organizers.map((u, key) => (
+            <div key={u.id}>
+              <div
+                className="w-full p-3"
+              >
+                <h1 className="font-medium">Nama : {u.name}</h1>
+              </div>
+              {organizers.length - 1 != key && (<hr className="w-full text-black/40 h-[0.4px] md:px-12 lg:px-12" />)}
             </div>
           ))}
         </div>

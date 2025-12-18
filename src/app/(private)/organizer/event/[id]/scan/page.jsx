@@ -186,7 +186,7 @@ export default function Page() {
         <button
           disabled={loadingSignOut}
           onClick={handleSignOut}
-          className="text-white font-medium py-2 px-4 rounded-md bg-red-500 self-start my-6 hover:bg-red-400 active:opacity-80 transition duration-100 disabled:bg-gray-500"
+          className="text-white font-medium py-2 px-4 rounded-md bg-red-500 self-start my-6 hover:bg-red-400 active:opacity-80 transition duration-100 disabled:opacity-60"
         >
           {loadingSignOut ? "Tunggu..." : "Log Out"}
         </button>

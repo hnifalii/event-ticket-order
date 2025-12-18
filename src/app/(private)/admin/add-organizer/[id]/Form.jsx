@@ -1,10 +1,8 @@
 "use client";
 
-import { events } from "@/data/events";
 import { users } from "@/data/users";
-import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 const EyeIcon = (props) => (
@@ -65,7 +63,7 @@ const PasswordToggleInput = ({
 
   return (
     <div>
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={name} className="font-semibold">{label}</label>
       <div className="relative mt-1">
         <input
           id={name}
@@ -99,22 +97,14 @@ const ErrorMessage = ({ message }) => (
   </p>
 );
 
-export default function Page() {
+export default function Form({ selectedEventId, selectedEventName }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [eventId, setEventId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { data: session, status } = useSession();
-
   const router = useRouter();
-
-  const search = useSearchParams();
-  const id = search.get("eventId");
-
-  const selectedEvent = events.find((e) => e.id == id);
 
   const API_URL = "https://capsular-peddlingly-immanuel.ngrok-free.dev";
 
@@ -188,19 +178,7 @@ export default function Page() {
     router.refresh();
   };
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth");
-      router.refresh();
-    } else {
-      if (session !== undefined && session?.user.role !== "admin") {
-        router.push("/auth");
-        router.refresh();
-      }
-    }
-  }, [router, session, status, session?.user.role]);
-
-  return selectedEvent != null ? (
+  return (
     <div className="min-h-screen flex flex-col px-6 py-6 md:px-24 md:py-8">
       <h1 className="text-3xl font-medium">Tambah Panitia Baru</h1>
       <p className="mt-2">
@@ -244,7 +222,7 @@ export default function Page() {
             onChange={(e) => setEventId(e.target.value)}
             className="focus:outline-none focus:ring-2 ring-1 focus:ring-[#7209b7]/80 rounded-md py-2 px-3"
           >
-            <option value={selectedEvent.id}>{selectedEvent.name}</option>
+            <option value={selectedEventId}>{selectedEventName}</option>
           </select>
         </div>
 
@@ -258,10 +236,6 @@ export default function Page() {
           {loading ? "Tunggu..." : "Submit"}
         </button>
       </form>
-    </div>
-  ) : (
-    <div className="min-h-screen flex flex-col justify-center items-center">
-      <h1 className="font-semibold text-2xl">Event Tidak Tersedia</h1>
     </div>
   );
 }

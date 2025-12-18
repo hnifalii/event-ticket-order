@@ -68,7 +68,7 @@ const Header = () => {
         <button
           onClick={handleSignOut}
           disabled={loading}
-          className="self-baseline py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100"
+          className="self-baseline py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:opacity-60 transition duration-100"
         >
           {loading ? "Tunggu..." : "Logout"}
         </button>
@@ -98,7 +98,7 @@ const Header = () => {
         <button
           onClick={handleSignOut}
           disabled={loading}
-          className="hidden md:block self-end py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:bg-gray-600 transition duration-100"
+          className="hidden md:block self-end py-2 px-4 rounded-md text-white bg-red-500 active:bg-red-400 hover:opacity-80 disabled:opacity-60 transition duration-100"
         >
           {loading ? "Tunggu..." : "Logout"}
         </button>
@@ -125,7 +125,7 @@ const Footer = () => {
 
   return (
     <footer className="w-full flex flex-col pt-12 mt-20 bg-[#7209b7] text-white">
-      <div className="flex flex-col lg:grid lg:grid-cols-3 px-6 md:px-12 lg:px-24 pb-12 gap-10 lg:gap-8">
+      <div className="flex flex-col md:grid md:grid-cols-3 lg:grid lg:grid-cols-3 px-6 md:px-12 lg:px-24 pb-12 gap-10 lg:gap-8">
         <div className="flex flex-col gap-4">
           <h2 className="text-3xl font-semibold font-rose text-white">
             ticken <span className="text-xl">(Admin)</span>
@@ -135,13 +135,13 @@ const Footer = () => {
             eos nihil totam sequi provident debitis voluptatum id iusto veniam!
           </p>
           <div className="flex flex-row gap-3">
-            <IoLogoInstagram className="size-7" />
-            <IoLogoTwitter className="size-7" />
-            <IoLogoYoutube className="size-7" />
+            <IoLogoInstagram className="size-7 hover:cursor-pointer" />
+            <IoLogoTwitter className="size-7 hover:cursor-pointer" />
+            <IoLogoYoutube className="size-7 hover:cursor-pointer" />
           </div>
         </div>
 
-        <div className="flex w-full lg:justify-center">
+        <div className="flex w-full md:justify-center lg:justify-center">
           <div>
             <h6 className="text-xl font-medium">Links</h6>
             <ul className="list-none mt-4 space-y-2">
@@ -164,7 +164,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="fflex w-full lg:justify-center">
+        <div className="fflex w-full md:justify-center lg:justify-center">
           <div>
             <h6 className="text-xl font-medium">Action</h6>
 
@@ -200,8 +200,8 @@ const Footer = () => {
 export default function Layout({ children }) {
   const pathname = usePathname();
 
-  const hideHeader = ["/organizer"].includes(pathname);
-  const hideFooter = ["/organizer"].includes(pathname);
+  const hideHeader = ["/organizer", "/organizer/profile"].includes(pathname) || (pathname.startsWith("/organizer/event/") && pathname.endsWith("/scan"));
+  const hideFooter = ["/organizer", "/organizer/profile"].includes(pathname) || (pathname.startsWith("/organizer/event/") && pathname.endsWith("/scan"));
 
   return (
     <SessionProvider>

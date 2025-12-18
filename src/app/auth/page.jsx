@@ -196,7 +196,7 @@ export default function Page() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoFocus
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#7209b7]"
+                  className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#7209b7]"
                 />
               </div>
 
@@ -225,7 +225,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="hidden md:block w-1/2 relative">
+        <div className="hidden md:block w-1/2 relative rounded-l-lg overflow-hidden">
           <Image
             src={ImgTicketing}
             alt="img-ticketing"

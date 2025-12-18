@@ -15,14 +15,15 @@ export default async function Page() {
   const events = await getMyEvents(session?.user.id);
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-3xl font-semibold">Halo!</h1>
-      <h1 className="text-3xl font-semibold">{session?.user.name}</h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem,
-        nesciunt? In, doloribus!
-      </p>
-      <h1 className="text-2xl font-medium mt-6">Cek Event Kamu!</h1>
+    <div className="flex flex-col justify-center gap-6 px-6 py-6 md:px-24 md:py-8">   
+      <div className="flex flex-col gap-2 lg:gap-3">
+        <h1 className="text-4xl font-bold">Halo, {session?.user.name}👋</h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis,
+          qui?
+        </p>
+      </div>
+      <h1 className="text-2xl font-medium mt-4">Cek Event Kamu!</h1>
       <div className="flex flex-col space-y-3 lg:grid lg:grid-cols-2 w-full">
         {events.length > 0 ? (
           events.map((e) => (
@@ -50,7 +51,7 @@ export default async function Page() {
               )}
               <div className="relative w-full h-48 sm:h-64 md:h-72">
                 <Image
-                  src={e.img}
+                  src={e.image}
                   alt={e.name}
                   fill
                   className="object-cover rounded-md"

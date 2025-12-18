@@ -137,7 +137,7 @@ export default function Page() {
           />
         </div>
         {image && (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-full items-center">
             <h1 className="font-medium">Preview</h1>
             <Image
               src={URL.createObjectURL(image[0])}

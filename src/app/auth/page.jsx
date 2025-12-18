@@ -173,7 +173,7 @@ export default function Page() {
       />
       <ToastProviders position="top-right" autoClose={1000} />
       <div className="flex min-h-screen">
-        <div className="w-full md:w-1/2 flex items-center justify-center px-8">
+        <div className="w-full lg:w-1/2 flex items-center justify-center px-8">
           <div className="w-full max-w-md space-y-4">
             <h1 className="text-4xl font-bold text-[#7209b7]">
               Selamat Datang!
@@ -225,7 +225,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="hidden md:block w-1/2 relative rounded-l-lg overflow-hidden">
+        <div className="hidden md:hidden lg:block w-1/2 relative rounded-l-lg overflow-hidden">
           <Image
             src={ImgTicketing}
             alt="img-ticketing"

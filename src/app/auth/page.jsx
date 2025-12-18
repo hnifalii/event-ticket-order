@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import NextTopLoader from "nextjs-toploader";
 import { useState } from "react";
 import ToastProviders from "../toastProviders";
+import Image from "next/image";
+import ImgTicketing from "@/assets/img_ticketing.png";
 
 const EyeIcon = (props) => (
   <svg
@@ -52,51 +54,42 @@ const EyeOffIcon = (props) => (
   </svg>
 );
 
-const PasswordToggleInput = ({
-  label = "Password",
-  name = "password",
-  value,
-  onChange,
-}) => {
+const PasswordToggleInput = ({ name = "password", value, onChange }) => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible((prev) => !prev);
   const inputType = isVisible ? "text" : "password";
 
   return (
-    <div className="mb-4">
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      <div className="relative mt-1">
-        <input
-          id={name}
-          name={name}
-          type={inputType}
-          value={value}
-          onChange={onChange}
-          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
-        />
+    <div className="relative mt-1">
+      <input
+        id={name}
+        name={name}
+        type={inputType}
+        value={value}
+        onChange={onChange}
+        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
+      />
 
-        <button
-          type="button"
-          onClick={toggleVisibility}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-400 hover:text-gray-600 focus:outline-none"
-          aria-label={isVisible ? "Sembunyikan password" : "Tampilkan password"}
-        >
-          {isVisible ? (
-            <EyeOffIcon className="h-5 w-5" />
-          ) : (
-            <EyeIcon className="h-5 w-5" />
-          )}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={toggleVisibility}
+        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-400 hover:text-gray-600 focus:outline-none"
+        aria-label={isVisible ? "Sembunyikan password" : "Tampilkan password"}
+      >
+        {isVisible ? (
+          <EyeOffIcon className="h-5 w-5" />
+        ) : (
+          <EyeIcon className="h-5 w-5" />
+        )}
+      </button>
     </div>
   );
 };
 
 const LoadingSpinner = () => (
-  <div className="flex items-center justify-center">
+  <div className="flex flex-row gap-3 items-center justify-center">
     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+    <h1 className="font-semibold text-white">Tunggu...</h1>
   </div>
 );
 
@@ -179,26 +172,23 @@ export default function Page() {
         speed={200}
       />
       <ToastProviders position="top-right" autoClose={1000} />
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="w-full max-w-sm bg-white p-8 rounded-2xl shadow-2xl border-t-4 border-t-[#f72585] transition duration-300">
-          <div className="mb-8 text-center">
-            <h2 className="text-3xl font-extrabold text-[#7209b7]">
+      <div className="flex min-h-screen">
+        <div className="w-full md:w-1/2 flex items-center justify-center px-8">
+          <div className="w-full max-w-md space-y-4">
+            <h1 className="text-4xl font-bold text-[#7209b7]">
               Selamat Datang!
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Masuk ke akun panitia Anda
-            </p>
-          </div>
+            </h1>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Username
-              </label>
-              <div className="mt-1">
+            <p className="opacity-70">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Distinctio, fuga?
+            </p>
+
+            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+              <div>
+                <label htmlFor="username" className="font-medium">
+                  Username
+                </label>
                 <input
                   id="username"
                   name="username"
@@ -206,34 +196,51 @@ export default function Page() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoFocus
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 outline-[#7209b7] focus:outline-none focus:ring-2 focus:ring-[#7209b7] sm:text-sm transition duration-150"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#7209b7]"
                 />
               </div>
-            </div>
 
-            <PasswordToggleInput
-              label="Password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+              <div>
+                <label htmlFor="password" className="font-medium">
+                  Password
+                </label>
 
-            {error && <ErrorMessage message={error} />}
+                <PasswordToggleInput
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-            <div>
+              {error && <ErrorMessage message={error} />}
+
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 bg-[#f72585] border border-transparent rounded-md shadow-sm font-semibold text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-100 transform hover:scale-[1.005] active:opacity-80 disabled:bg-gray-600"
+                className="w-full py-2 bg-[#f72585] rounded-md font-semibold text-white hover:opacity-90 disabled:opacity-60 transition"
               >
                 {loading ? <LoadingSpinner /> : "Log In"}
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
+        </div>
 
-          <div className="mt-6">
-            <p className="text-center text-xs text-gray-400">
-              Hanya untuk penggunaan internal.
+        <div className="hidden md:block w-1/2 relative">
+          <Image
+            src={ImgTicketing}
+            alt="img-ticketing"
+            fill
+            className="object-cover"
+            priority
+          />
+
+          <div className="absolute inset-0 bg-black/22"></div>
+
+          <div className="absolute bottom-0 left-0 flex flex-col justify-center px-8 py-12 space-y-3">
+            <h2 className="text-4xl font-bold text-white">ticken</h2>
+            <hr className="text-white h-[0.25px] w-full" />
+            <p className="text-white/80 mt-2 max-w-md">
+              Kelola tiket dengan mudah, cepat, dan aman. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio minus culpa aut.
             </p>
           </div>
         </div>

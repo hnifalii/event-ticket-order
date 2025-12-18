@@ -4,7 +4,12 @@ import { SessionProvider, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { IoMdMenu } from "react-icons/io";
+import {
+  IoLogoInstagram,
+  IoLogoTwitter,
+  IoLogoYoutube,
+  IoMdMenu,
+} from "react-icons/io";
 import ToastProviders from "../toastProviders";
 import NextTopLoader from "nextjs-toploader";
 import SessionWrapper from "./sessionWrapper";
@@ -120,46 +125,64 @@ const Footer = () => {
 
   return (
     <footer className="w-full flex flex-col pt-12 mt-20 bg-[#7209b7] text-white">
-      <div className="flex flex-col lg:flex-row px-6 md:px-12 lg:px-24 pb-12 gap-10 lg:gap-8 justify-between">
-        <div className="flex flex-col gap-2">
-          <h2 className="flex-1 text-3xl font-semibold font-rose text-white">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 px-6 md:px-12 lg:px-24 pb-12 gap-10 lg:gap-8">
+        <div className="flex flex-col gap-4">
+          <h2 className="text-3xl font-semibold font-rose text-white">
             ticken <span className="text-xl">(Admin)</span>
           </h2>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita et
             eos nihil totam sequi provident debitis voluptatum id iusto veniam!
           </p>
+          <div className="flex flex-row gap-3">
+            <IoLogoInstagram className="size-7" />
+            <IoLogoTwitter className="size-7" />
+            <IoLogoYoutube className="size-7" />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <h6 className="text-xl font-medium">Links</h6>
-
-          <Link href="/admin" className="hover:underline">
-            My Events
-          </Link>
-          <Link href="/admin/add-event" className="hover:underline">
-            Add New Event
-          </Link>
-          <Link href="/admin/profile" className="hover:underline">
-            My Profile
-          </Link>
+        <div className="flex w-full lg:justify-center">
+          <div>
+            <h6 className="text-xl font-medium">Links</h6>
+            <ul className="list-none mt-4 space-y-2">
+              <li>
+                <Link href="/admin" className="hover:underline">
+                  My Events
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin/add-event" className="hover:underline">
+                  Add New Event
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin/profile" className="hover:underline">
+                  My Profile
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <h6 className="text-xl font-medium">Action</h6>
+        <div className="fflex w-full lg:justify-center">
+          <div>
+            <h6 className="text-xl font-medium">Action</h6>
 
-          {!loading ? (
-            <button onClick={handleSignOut} className="hover:underline w-fit">
-              Logout
-            </button>
-          ) : (
-            <h1>Tunggu...</h1>
-          )}
+            {!loading ? (
+              <button
+                onClick={handleSignOut}
+                className="hover:underline w-fit mt-4"
+              >
+                Logout
+              </button>
+            ) : (
+              <h1 className="mt-4">Tunggu...</h1>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* BOTTOM SECTION */}
-      <div className="w-full flex flex-col md:flex-row px-6 md:px-12 lg:px-24 py-6 gap-4 md:gap-0 justify-between items-center border-t border-white">
+      <div className="w-full flex flex-col md:flex-row px-6 md:px-12 lg:px-24 py-6 gap-4 md:gap-0 border-t border-t-white justify-between items-center">
         <div className="flex gap-2">
           <div className="size-2 rounded-full bg-white"></div>
           <div className="size-2 rounded-full bg-white"></div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { serverFetch } from "@/lib/server/serverFetch";
 import { useEffect, useState } from "react";
 
 export default function CheckoutPage({ id }) {
@@ -17,7 +18,7 @@ export default function CheckoutPage({ id }) {
   // Load event data
   useEffect(() => {
     async function load() {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`);
+      const res = await serverFetch("/api/events");
       const json = await res.json();
       setEvents(json);
       setLoading(false);
@@ -55,10 +56,7 @@ export default function CheckoutPage({ id }) {
     try {
       setSubmitting(true);
 
-      // const res = await fetch(`${process.env.NEXT_PUBLIC_ORDER_WEBHOOK}`, {
-      const res = await fetch(
-        `https://capsular-peddlingly-immanuel.ngrok-free.dev/webhook-test/post/order`,
-        {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_ORDER_WEBHOOK}`, {
           method: "POST",
           body: formData,
         }

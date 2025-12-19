@@ -1,6 +1,5 @@
 "use client";
 
-import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import NextTopLoader from "nextjs-toploader";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import ToastProviders from "../toastProviders";
 import Image from "next/image";
 import ImgTicketing from "@/assets/img_ticketing.png";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const EyeIcon = (props) => (
   <svg
@@ -101,8 +101,11 @@ const ErrorMessage = ({ message }) => (
 );
 
 export default function Page() {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -113,50 +116,59 @@ export default function Page() {
     setError("");
     setLoading(true);
 
-    if (username == "" || password == "") {
-      setError("Mohon isi semua field yang tersedia!");
-      setLoading(false);
-      return;
-    }
+    const formData = new FormData(e.target);
 
-    if (password.length < 8) {
-      setError("Panjang minimal password adalah 8");
-      setLoading(false);
-      return;
-    }
+    try {
+      if (
+        email == "" ||
+        name == "" ||
+        username == "" ||
+        password == "" ||
+        confirmPassword == ""
+      ) {
+        setError("Mohon isi semua field yang tersedia!");
+        return;
+      }
 
-    const result = await signIn("credentials", {
-      username,
-      password,
-      redirect: false,
-    });
+      if (password.length < 8) {
+        setError("Panjang minimal password adalah 8");
+        return;
+      }
 
-    const session = await getSession();
+      if (password !== confirmPassword) {
+        setError("Konfirmasi password tidak sesuai");
+        return;
+      }
 
-    if (result?.error) {
-      setError("Username atau password salah!");
-      setLoading(false);
+      const response = await fetch("/api/users/register", {
+        method: "POST",
+        body: formData,
+      });
+
+      const content = await response.json();
+
+      if (content.status === 409) {
+        setError(content.message);
+        return;
+      }
+
+      if (content.status === 500) {
+        setError("Gagal membuat akun");
+        return;
+      }
+
+      if (!response.ok) {
+        setError("Gagal membuat akun.");
+        return;
+      }
+
       router.push("/auth");
       router.refresh();
-    } else {
-      if (session != null) {
-        switch (session?.user.role) {
-          case "admin":
-            router.push("/admin");
-            router.refresh();
-            break;
-          case "organizer":
-            router.push("/organizer");
-            router.refresh();
-            break;
-          default:
-            router.push("/");
-            router.refresh();
-        }
-      } else {
-        router.push("/auth");
-        router.refresh();
-      }
+      toast.success(content.message);
+    } catch (err) {
+      setError("Kesalahan saat mengirim/memproses:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -177,7 +189,7 @@ export default function Page() {
         <div className="w-full lg:w-1/2 flex items-center justify-center px-8">
           <div className="w-full max-w-md space-y-4">
             <h1 className="text-4xl font-bold text-[#7209b7]">
-              Selamat Datang Kembali!
+              Selamat Datang!
             </h1>
 
             <p className="opacity-70">
@@ -186,6 +198,36 @@ export default function Page() {
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+              <div>
+                <label htmlFor="email" className="font-medium">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoFocus
+                  className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#7209b7]"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="name" className="font-medium">
+                  Name
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  autoFocus
+                  className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#7209b7]"
+                />
+              </div>
+
               <div>
                 <label htmlFor="username" className="font-medium">
                   Username
@@ -213,6 +255,18 @@ export default function Page() {
                 />
               </div>
 
+              <div>
+                <label htmlFor="confirmPassword" className="font-medium">
+                  Confirm Password
+                </label>
+
+                <PasswordToggleInput
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+
               {error && <ErrorMessage message={error} />}
 
               <button
@@ -220,17 +274,17 @@ export default function Page() {
                 type="submit"
                 className="w-full py-2 bg-[#f72585] rounded-md font-semibold text-white hover:opacity-90 disabled:opacity-60 transition"
               >
-                {loading ? <LoadingSpinner /> : "Log In"}
+                {loading ? <LoadingSpinner /> : "Register"}
               </button>
             </form>
 
             <p className="mt-8 text-sm">
-              Belum punya akun?{" "}
+              Sudah punya akun?{" "}
               <Link
-                href={`/register`}
+                href={`/auth`}
                 className="text-[#7209b7] hover:underline font-medium"
               >
-                Daftar Sekarang
+                Login Sekarang
               </Link>
             </p>
           </div>

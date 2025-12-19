@@ -36,6 +36,10 @@ button:hover {
   cursor: pointer;
 }
 
+button:disabled {
+  opacity: 70%;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }

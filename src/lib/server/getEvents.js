@@ -1,5 +1,5 @@
 export async function getEvents() {
-  const res = await fetch(`${process.env.BASE_URL}/api/tickets`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets`, {
     next: { revalidate: 60 },
   });
 

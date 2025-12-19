@@ -1,24 +1,14 @@
-import Image from "next/image";
-import Link from "next/link";
-import TicketDropdown from "./TicketDropdown";
+import EventCarousel from "@/components/EventCarousel";
 import { parseDMY } from "@/utils/formatter";
 import {
-  IoCalendarOutline,
-  IoLinkOutline,
   IoLocationOutline,
+  IoCalendarOutline,
   IoPricetagsOutline,
+  IoLinkOutline,
   IoShareSocialOutline,
 } from "react-icons/io5";
-import EventCarousel from "@/components/EventCarousel";
-import { copyLink, handleShare } from "@/utils/helpers";
-import ShareButtons from "@/components/ShareButtons";
-
-async function getEvents() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`, {
-    next: { revalidate: 10 },
-  });
-  return res.json();
-}
+import { getEvents } from "./page";
+import TicketDropdown from "./TicketDropdown";
 
 export default async function TicketDetail({ params }) {
   const events = await getEvents();
@@ -32,7 +22,6 @@ export default async function TicketDetail({ params }) {
   } - ${event.time_end ? event.time_end.slice(0, -3) + " WIB" : "Selesai"}`;
 
   // console.log(event);
-
   if (!event) {
     return (
       <div className="min-h-screen p-10">
@@ -42,7 +31,7 @@ export default async function TicketDetail({ params }) {
   }
 
   return (
-    <main className="w-full px-4 md:px-48 p-6">
+    <main className="w-full px-48 p-6">
       <div className="p-4 rounded-lg bg-[#e5bdff]">
         <img
           src={event.img}
@@ -73,7 +62,7 @@ export default async function TicketDetail({ params }) {
             {/* Event tags */}
             <div className="flex gap-1 items-center line-clamp-1 text-secondary">
               <IoPricetagsOutline className="size-5 md:size-6" />
-              <p className="line-clamp-1">{event.tags}</p>
+              <p className="line-clamp-1">Konser</p>
             </div>
           </div>
 
@@ -84,38 +73,46 @@ export default async function TicketDetail({ params }) {
           </div>
 
           {/* Share */}
-          <ShareButtons event={event}/>
+          <h3 className="mt-4 text-lg font-medium">Bagikan Event</h3>
+          <div className="flex gap-2">
+            <button className="p-2 bg-blue-400 text-white rounded-full">
+              <IoLinkOutline className="size-6" />
+            </button>
+            <button className="p-2 bg-primary text-white rounded-full">
+              <IoShareSocialOutline className="size-6" />
+            </button>
+          </div>
         </div>
 
         {/* Tickets */}
-        <TicketDropdown event={event} />
+        <TicketDropdown tickets={event.tickets} />
       </div>
 
       {/* <div className="mt-6 p-4 border rounded bg-white shadow">
-        <h3 className="font-semibold">Price</h3>
-
-        {event.price === 0   ? (
-          <p className="text-blue-600 mt-2">Gratis</p>
-        ) : !event.price.vip ? (
-          <p className="text-blue-600 mt-2">
-            Rp{Number(event.price.reg).toLocaleString("id-ID")}
-          </p>
-        ) : (
-          <ul className="text-blue-600 mt-2 space-y-1">
-            <li>
-              Reguler: Rp{Number(event.price.reg).toLocaleString("id-ID")}
-            </li>
-            <li>VIP: Rp{Number(event.price.vip).toLocaleString("id-ID")}</li>
-          </ul>
-        )}
-      </div> */}
+              <h3 className="font-semibold">Price</h3>
+      
+              {event.price === 0   ? (
+                <p className="text-blue-600 mt-2">Gratis</p>
+              ) : !event.price.vip ? (
+                <p className="text-blue-600 mt-2">
+                  Rp{Number(event.price.reg).toLocaleString("id-ID")}
+                </p>
+              ) : (
+                <ul className="text-blue-600 mt-2 space-y-1">
+                  <li>
+                    Reguler: Rp{Number(event.price.reg).toLocaleString("id-ID")}
+                  </li>
+                  <li>VIP: Rp{Number(event.price.vip).toLocaleString("id-ID")}</li>
+                </ul>
+              )}
+            </div> */}
 
       {/* <Link
-        href={`/checkout?id=${event.event_id}`}
-        className="mt-6 inline-block bg-green-600 text-white py-3 px-6 rounded hover:bg-green-700"
-      >
-        Order Ticket
-      </Link> */}
+              href={`/checkout?id=${event.event_id}`}
+              className="mt-6 inline-block bg-green-600 text-white py-3 px-6 rounded hover:bg-green-700"
+            >
+              Order Ticket
+            </Link> */}
 
       {/* Events carousel */}
       <div className="flex flex-col mt-12 gap-2">

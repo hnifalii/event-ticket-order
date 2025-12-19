@@ -1,4 +1,4 @@
-export default function TicketCardLoading() {
+export default function EventCardLoading() {
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-lg shadow overflow-hidden animate-pulse transition-opacity duration-300">
       {/* Image */}
@@ -27,5 +27,5 @@ export default function TicketCardLoading() {
         </div>
       </div>
     </div>
-  )
+  );
 }

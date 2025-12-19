@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main className="w-full px-72 p-6 animate-pulse">
+    <main className="w-full px-48 p-6 animate-pulse">
       <div className="p-4 rounded-lg bg-[#e5bdff]">
         <div className="w-full aspect-3/1 rounded-lg overflow-hidden object-cover object-center border-2 bg-linear-to-br from-gray-200 to-gray-100" />
       </div>

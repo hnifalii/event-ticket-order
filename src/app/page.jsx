@@ -1,11 +1,11 @@
-import TicketCard from "@/components/TicketCard";
+import EventCard from "@/components/EventCard";
 import Image from "next/image";
 import HeroBg from "@/assets/hero-bg.png";
 import { Suspense } from "react";
-import TicketCardLoading from "@/components/placeholder/TicketCardLoading";
+import EventCardLoading from "@/components/placeholder/EventCardLoading";
 
 async function getEvents() {
-  const res = await fetch("http://localhost:3000/api/tickets", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`, {
     next: { revalidate: 10 },
   });
   return res.json();
@@ -13,7 +13,7 @@ async function getEvents() {
 
 export default async function Home() {
   const events = await getEvents();
-
+  
   return (
     <main className="w-full">
       {/* Hero section */}
@@ -28,7 +28,7 @@ export default async function Home() {
       {/* Content: Upcoming events */}
       <section
         id="popular"
-        className="relative w-full flex flex-col justify-center items-center px-4 md:px-24 py-4 md:py-24"
+        className="relative w-full flex flex-col justify-center items-center px-4 md:px-24 lg:px-36 py-4 md:py-24"
       >
         {/* <div className="absolute -top-1/12 w-2/3 bg-secondary rounded-xl">
           <input type="text" className="py-2" />
@@ -38,11 +38,11 @@ export default async function Home() {
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Suspense
             fallback={Array.from({ length: 6 }).map((_, i) => (
-              <TicketCardLoading key={i} />
+              <EventCardLoading key={i} />
             ))}
           >
             {events.map((event) => (
-              <TicketCard key={event.event_id} event={event} />
+              <EventCard key={event.event_id} event={event} />
               // <TicketCardLoading key={event.event_id} />
             ))}
           </Suspense>

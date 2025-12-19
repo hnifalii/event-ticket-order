@@ -15,7 +15,7 @@ const VIPPriceInput = ({ onChange }) => (
       type="number"
       name="vipPrice"
       onChange={onChange}
-      className="focus:outline-none ring-1 focus:ring-purple-400 rounded-md p-2"
+      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
     />
   </div>
 );
@@ -133,7 +133,7 @@ export default function Page() {
             type="file"
             name="image"
             onChange={(e) => setImage(e.target.files)}
-            className="focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
         {image && (
@@ -161,7 +161,7 @@ export default function Page() {
             type="text"
             name="name"
             onChange={(e) => setName(e.target.value)}
-            className="focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
@@ -173,7 +173,7 @@ export default function Page() {
             rows={5}
             name="description"
             onChange={(e) => setDescription(e.target.value)}
-            className="focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
@@ -184,7 +184,7 @@ export default function Page() {
             type="text"
             name="location"
             onChange={(e) => setLocation(e.target.value)}
-            className="focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
@@ -195,7 +195,7 @@ export default function Page() {
             type="text"
             name="ticketType"
             onChange={(e) => setTicketType(e.target.value)}
-            className="focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           >
             <option value="single">Single</option>
             <option value="tiered">Tiered</option>
@@ -209,7 +209,7 @@ export default function Page() {
             type="number"
             name="regularPrice"
             onChange={(e) => setRegularPrice(e.target.value)}
-            className="focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
         {ticketType == "tiered" && (
@@ -223,7 +223,7 @@ export default function Page() {
             type="date"
             name="date"
             onChange={(e) => setDate(e.target.value)}
-            className="focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3 w-full"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
@@ -234,7 +234,7 @@ export default function Page() {
             type="time"
             name="timeStart"
             onChange={(e) => setTimeStart(e.target.value)}
-            className="w-full focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
@@ -245,7 +245,7 @@ export default function Page() {
             type="time"
             name="timeEnd"
             onChange={(e) => setTimeEnd(e.target.value)}
-            className="w-full focus:outline-none focus:ring-2 focus:ring-[#7209b7]/80 ring-1 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
 

@@ -17,6 +17,9 @@ export default async function Page({ params }) {
       <h1 className="font-semibold text-2xl">Event Tidak Tersedia</h1>
     </div>
   ) : (
-    <Form selectedEventId={selectedEvent.event_id} selectedEventName={selectedEvent.name} />
+    <Form
+      selectedEventId={selectedEvent.event_id}
+      selectedEventName={selectedEvent.name}
+    />
   );
 }

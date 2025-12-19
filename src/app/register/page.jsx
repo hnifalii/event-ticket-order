@@ -145,26 +145,26 @@ export default function Page() {
         body: formData,
       });
 
-      const content = await response.json();
-
-      if (content.status === 409) {
-        setError(content.message);
-        return;
-      }
-
-      if (content.status === 500) {
-        setError("Gagal membuat akun");
-        return;
-      }
-
       if (!response.ok) {
         setError("Gagal membuat akun.");
         return;
       }
 
+      const result = await response.json();
+
+      if (result.status === 409) {
+        setError(result.message);
+        return;
+      }
+
+      if (result.status === 500) {
+        setError("Gagal membuat akun");
+        return;
+      }
+
       router.push("/auth");
       router.refresh();
-      toast.success(content.message);
+      toast.success(result.message);
     } catch (err) {
       setError("Kesalahan saat mengirim/memproses:", err);
     } finally {

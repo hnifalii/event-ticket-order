@@ -1,6 +1,5 @@
 "use client";
 
-import { users } from "@/data/users";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -51,42 +50,34 @@ const EyeOffIcon = (props) => (
   </svg>
 );
 
-const PasswordToggleInput = ({
-  label = "Password",
-  name = "password",
-  value,
-  onChange,
-}) => {
+const PasswordToggleInput = ({ name = "password", value, onChange }) => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible((prev) => !prev);
   const inputType = isVisible ? "text" : "password";
 
   return (
-    <div>
-      <label htmlFor={name} className="font-semibold">{label}</label>
-      <div className="relative mt-1">
-        <input
-          id={name}
-          name={name}
-          type={inputType}
-          value={value}
-          onChange={onChange}
-          className="focus:outline-none focus:ring-2 ring-1 focus:ring-[#7209b7]/80 rounded-md p-2 appearance-none block w-full px-3 py-2 pr-10"
-        />
+    <div className="relative mt-1">
+      <input
+        id={name}
+        name={name}
+        type={inputType}
+        value={value}
+        onChange={onChange}
+        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
+      />
 
-        <button
-          type="button"
-          onClick={toggleVisibility}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-black focus:outline-none"
-          aria-label={isVisible ? "Sembunyikan password" : "Tampilkan password"}
-        >
-          {isVisible ? (
-            <EyeOffIcon className="h-5 w-5" />
-          ) : (
-            <EyeIcon className="h-5 w-5" />
-          )}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={toggleVisibility}
+        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-400 hover:text-gray-600 focus:outline-none"
+        aria-label={isVisible ? "Sembunyikan password" : "Tampilkan password"}
+      >
+        {isVisible ? (
+          <EyeOffIcon className="h-5 w-5" />
+        ) : (
+          <EyeIcon className="h-5 w-5" />
+        )}
+      </button>
     </div>
   );
 };
@@ -98,22 +89,30 @@ const ErrorMessage = ({ message }) => (
 );
 
 export default function Form({ selectedEventId, selectedEventName }) {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const router = useRouter();
 
-  const API_URL = "https://capsular-peddlingly-immanuel.ngrok-free.dev";
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    const formData = new FormData(e.target);
+
     try {
-      if (username == "" || password == "" || name == "" || eventId == "") {
+      if (
+        email == "" ||
+        name == "" ||
+        username == "" ||
+        password == "" ||
+        confirmPassword == ""
+      ) {
         setError("Mohon isi semua field yang tersedia!");
         return;
       }
@@ -123,59 +122,44 @@ export default function Form({ selectedEventId, selectedEventName }) {
         return;
       }
 
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-          name: name,
-          eventId: eventId,
-        }),
-      });
+      if (password !== confirmPassword) {
+        setError("Konfirmasi password tidak sesuai");
+        return;
+      }
+
+      const response = await fetch(
+        `/api/event/${selectedEventId}/add-organizer`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
-        setError(`Server error: HTTP ${response.status}`);
+        setError("Gagal membuat akun.");
         return;
       }
 
       const result = await response.json();
 
-      if (result && result.success === true) {
-        router.push("/admin");
-        router.refresh();
-        toast.success("Berhasil!");
-      } else {
-        setError(
-          result.data || result.message || "Failed to create new event."
-        );
+      if (result.status === 409) {
+        setError(result.message);
         return;
       }
+
+      if (result.status === 500) {
+        setError("Gagal membuat akun");
+        return;
+      }
+
+      router.push(`/admin/detail/${selectedEventId}`);
+      router.refresh();
+      toast.success(result.message);
     } catch (err) {
       setError("Kesalahan saat mengirim/memproses:", err);
     } finally {
       setLoading(false);
     }
-  };
-
-  const testSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const newOrganizer = {
-      id: 5,
-      username: username,
-      password: password,
-      name: name,
-      eventId: eventId,
-    };
-
-    users.push(newOrganizer);
-
-    router.push("/admin");
-    router.refresh();
   };
 
   return (
@@ -185,22 +169,18 @@ export default function Form({ selectedEventId, selectedEventName }) {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, iste.
       </p>
 
-      <form onSubmit={testSubmit} className="flex flex-col gap-5 mt-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-6">
         <div className="flex flex-col gap-1 w-full">
-          <label htmlFor="username" className="font-medium">
-            Username
+          <label htmlFor="email" className="font-medium">
+            Email
           </label>
           <input
-            type="text"
-            name="username"
-            onChange={(e) => setUsername(e.target.value)}
-            className="focus:outline-none focus:ring-2 ring-1 focus:ring-[#7209b7]/80 rounded-md py-2 px-3"
+            type="email"
+            name="email"
+            onChange={(e) => setEmail(e.target.value)}
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           />
         </div>
-        <PasswordToggleInput
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
         <div className="flex flex-col gap-1 w-full">
           <label htmlFor="name" className="font-medium">
             Name
@@ -209,7 +189,40 @@ export default function Form({ selectedEventId, selectedEventName }) {
             type="text"
             name="name"
             onChange={(e) => setName(e.target.value)}
-            className="focus:outline-none focus:ring-2 ring-1 focus:ring-[#7209b7]/80 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
+          />
+        </div>
+        <div className="flex flex-col gap-1 w-full">
+          <label htmlFor="username" className="font-medium">
+            Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            onChange={(e) => setUsername(e.target.value)}
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
+          />
+        </div>
+        <div className="flex flex-col gap-1 w-full">
+          <label htmlFor="password" className="font-medium">
+            Password
+          </label>
+
+          <PasswordToggleInput
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1 w-full">
+          <label htmlFor="password" className="font-medium">
+            Confirm Password
+          </label>
+
+          <PasswordToggleInput
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
@@ -217,10 +230,9 @@ export default function Form({ selectedEventId, selectedEventName }) {
             Event
           </label>
           <select
-            disabled={true}
             name="eventId"
             onChange={(e) => setEventId(e.target.value)}
-            className="focus:outline-none focus:ring-2 ring-1 focus:ring-[#7209b7]/80 rounded-md py-2 px-3"
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none ring-1 ring-transparent focus:ring-2 focus:ring-[#7209b7] sm:text-sm pr-10 transition duration-150"
           >
             <option value={selectedEventId}>{selectedEventName}</option>
           </select>

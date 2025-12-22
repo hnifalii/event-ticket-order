@@ -3,9 +3,10 @@ import Image from "next/image";
 import HeroBg from "@/assets/hero-bg.png";
 import { Suspense } from "react";
 import EventCardLoading from "@/components/placeholder/EventCardLoading";
+import { serverFetch } from "@/lib/server/serverFetch";
 
 async function getEvents() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`, {
+  const res = await serverFetch("/api/events", {
     next: { revalidate: 10 },
   });
   return res.json();
@@ -13,7 +14,7 @@ async function getEvents() {
 
 export default async function Home() {
   const events = await getEvents();
-  
+
   return (
     <main className="w-full">
       {/* Hero section */}

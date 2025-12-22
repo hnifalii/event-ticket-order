@@ -1,20 +1,15 @@
-import Image from "next/image";
-import Link from "next/link";
 import TicketDropdown from "./TicketDropdown";
 import { parseDMY } from "@/utils/formatter";
 import {
   IoCalendarOutline,
-  IoLinkOutline,
   IoLocationOutline,
   IoPricetagsOutline,
-  IoShareSocialOutline,
 } from "react-icons/io5";
 import EventCarousel from "@/components/EventCarousel";
-import { copyLink, handleShare } from "@/utils/helpers";
 import ShareButtons from "@/components/ShareButtons";
 
 async function getEvents() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`, {
+  const res = await serverFetch("/api/events", {
     next: { revalidate: 10 },
   });
   return res.json();
@@ -84,7 +79,7 @@ export default async function TicketDetail({ params }) {
           </div>
 
           {/* Share */}
-          <ShareButtons event={event}/>
+          <ShareButtons event={event} />
         </div>
 
         {/* Tickets */}
